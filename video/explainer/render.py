@@ -33,6 +33,7 @@ LABEL = F("Inter-Light.ttf", 32)
 SMALL = F("Inter-Light.ttf", 30)
 PILL = F("Inter-Medium.ttf", 40)
 STEP = F("Inter-Medium.ttf", 34)
+CTA = F("Inter-Medium.ttf", 50)
 NUM = F("Inter-Medium.ttf", 28)
 HEART = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 40)
 
@@ -423,8 +424,8 @@ def draw_graphics(ov, t, cam):
     # outro: book + yellow bag + arrow (no words)
     if t >= OUTRO:
         ba = fade(t, OUTRO + 0.15, 0.8)
-        h = 700
-        cy = 690 + 8 * math.sin(2 * math.pi * (t - OUTRO) / 4.0) + 20 * (1 - ba) + gy
+        h = 660
+        cy = 640 + 8 * math.sin(2 * math.pi * (t - OUTRO) / 4.0) + 20 * (1 - ba) + gy
         bw = int(BOOK.width * h / BOOK.height)
         bk = BOOK.resize((bw, h), Image.LANCZOS)
         bk.putalpha(bk.getchannel("A").point(lambda v: int(v * ba)))
@@ -439,13 +440,16 @@ def draw_graphics(ov, t, cam):
             sz = int(BAG.width * sc)
             bg_ = BAG.resize((sz, sz), Image.LANCZOS)
             bg_.putalpha(bg_.getchannel("A").point(lambda v: int(v * ga)))
-            ov.alpha_composite(bg_, (int(540 - sz / 2), int(1230 - sz / 2)))
+            ov.alpha_composite(bg_, (int(540 - sz / 2), int(1140 - sz / 2)))
+        ca = fade(t, OUTRO + 0.95, 0.6)
+        if ca > 0:
+            text_fade(ov, t, OUTRO + 0.95, (540, 1330), "Beg kuning di bawah", CTA, (255, 205, 60))
         aa = fade(t, OUTRO + 1.15, 0.5)
         if aa > 0:
             ph = (t - OUTRO - 1.15)
             for k in range(2):
                 off = 10 * (0.5 - 0.5 * math.cos(2 * math.pi * ph / 1.3))
-                y = 1380 + k * 44 + off
+                y = 1395 + k * 44 + off
                 al = aa * (0.95 - 0.35 * k)
                 d.line([(500, y), (540, y + 34), (580, y)], fill=(255, 196, 28, int(255 * al)), width=12, joint="curve")
 

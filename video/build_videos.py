@@ -37,6 +37,8 @@ def shot(name, src, ss, dur, z0=1.0, z1=1.1, cx=0.5, cy=0.5, speed=1.0, grade="p
          fin=None, fout=None, size=(W, H)):
     """Render one shot to an intermediate clip of exactly `dur` seconds."""
     out = os.path.join(TMP, name + ".mp4")
+    if os.path.exists(out) and not os.environ.get("REBUILD"):
+        return out
     src_dur = dur * speed + 0.1
     pre = []
     if speed < 1.0:
@@ -206,7 +208,7 @@ def build_a():
             e += chunk_events(p, chunks, "Cap", (540, 1180))
     # CTA
     e.append(ev(32.6, 36.0, "CTA", r"{\pos(540,1230)\fad(150,150)" + POP + r"}NAK TAHU CARA\N{\c&H0000D4FF&}KAHWIN TANPA COUPLE{\c&H00FFFFFF&}?"))
-    e.append(ev(36.0, 40.0, "CTA", r"{\pos(540,1230)\fad(150,300)" + POP + r"}DAPATKAN BUKU INI\N{\c&H0000D4FF&}LINK DI BIO"))
+    e.append(ev(36.0, 40.0, "CTA", r"{\pos(540,1230)\fad(150,300)" + POP + r"}DAPATKAN BUKU INI\N{\c&H0000D4FF&\fs88}BEG KUNING DI BAWAH"))
     ass = os.path.join(TMP, "A.ass")
     with open(ass, "w") as f:
         f.write(ass_header(styles) + "".join(e))
@@ -216,7 +218,7 @@ def build_a():
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", v, "-i", AUDIO,
                     "-filter_complex", f"[0:v]ass={ass}:fontsdir={FONTS}[v];[1:a]{af}[a]",
                     "-map", "[v]", "-map", "[a]", "-t", "40", "-c:v", "libx264", "-preset", "slow",
-                    "-crf", "18", "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", "30",
+                    "-crf", "21", "-pix_fmt", "yuv420p", "-profile:v", "high", "-r", "30",
                     "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", out], check=True)
     return out
 
@@ -284,7 +286,7 @@ def build_b():
     # outro over dark quote page + link in band
     e.append(ev(36.0, 40.0, "Title", r"{\pos(540,700)\fad(500,500)}Ajari Aku\NTinggalkan Maksiat"))
     e.append(ev(36.4, 40.0, "Spaced", r"{\pos(540,935)\fad(500,500)}SHUKERY AZIZAN"))
-    e.append(ev(37.0, 40.0, "Spaced", r"{\pos(540,%d)\fad(500,500)\fs42\c&H00B0E0F0&}DAPATKAN DI LINK BIO" % BAND))
+    e.append(ev(37.0, 40.0, "Spaced", r"{\pos(540,%d)\fad(500,500)\fs40\fsp6\c&H00B0E0F0&}DAPATKAN DI BEG KUNING DI BAWAH" % BAND))
     ass = os.path.join(TMP, "B.ass")
     with open(ass, "w") as f:
         f.write(ass_header(styles) + "".join(e))
